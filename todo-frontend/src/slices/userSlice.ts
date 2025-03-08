@@ -1,4 +1,5 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import Cookie from "js-cookie";
 
 interface User {
     username: string;
@@ -35,6 +36,10 @@ const userSlice = createSlice({
             state.createdAt = action.payload.createdDate;
             state.loggedIn = true;
             state.accessToken = action.payload.accessToken;
+
+            Cookie.set('accessToken', action.payload.accessToken, {
+                expires: 0.00139,
+            });
         },
 
         logout: (state) => {
