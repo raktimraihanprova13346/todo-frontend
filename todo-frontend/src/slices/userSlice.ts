@@ -38,7 +38,7 @@ const userSlice = createSlice({
             state.accessToken = action.payload.accessToken;
 
             Cookie.set('accessToken', action.payload.accessToken, {
-                expires: 0.00139,
+                expires: 1,
             });
         },
 

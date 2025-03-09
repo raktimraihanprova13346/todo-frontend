@@ -6,6 +6,7 @@ import {login} from "../../slices/userSlice";
 import store from "../../store";
 import Swal from "sweetalert2";
 import {useNavigate} from "react-router-dom";
+import classNames from "classnames";
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -85,7 +86,8 @@ const LoginPage: React.FC = () => {
                             required
                         />
                     </div>
-                    <button type="submit" disabled={ emailError.length > 1 }>Submit</button>
+                    <button type="submit" className={classNames("signin-button",{ 'disabled': !email || !password })}
+                            disabled={ emailError.length > 1 || passwordError.length > 1 }>Submit</button>
                 </form>
                 <p>Don't have an account? <a href="/signup">Sign up</a></p>
             </div>

@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import SignUpServices, {SignUpInterface, SignUpResponse} from "../../services/signUp";
 import Swal from "sweetalert2";
 import {useNavigate} from "react-router-dom";
+import classNames from "classnames";
 
 const SignUpPage: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -42,15 +43,7 @@ const SignUpPage: React.FC = () => {
         setFormData({ ...formData, [name]: value });
         const passwordRex = /^(?=.*[A-Za-z])(?=.*\d|.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
         if (!passwordRex.test(value)) {
-            setPasswordError(
-                "<div> " +
-                "<ul>" +
-                "" +
-                "<li> The Password must be at least 8 characters long. </li>" +
-                "<li> Contain at least one uppercase letter or one lowercase letter. </li>" +
-                "<li> OR one number or one special character. </li>" +
-                "</div>"
-            );
+            setPasswordError("Invalid Password. Please try again");
         } else {
             setPasswordError("");
         }
@@ -140,13 +133,21 @@ const SignUpPage: React.FC = () => {
                         required
                     />
                     {
-                        passwordError && (<p style={{color: "red"}}> {passwordError} </p>)
+                        passwordError && (
+                            <div style={{color: "red"}}>
+                                <ul>
+                                    <li> The Password must be at least 8 characters long. </li>
+                                    <li> Contain at least one uppercase letter or one lowercase letter. </li>
+                                    <li> OR one number or one special character. </li>
+                                </ul>
+                            </div>
+                        )
                     }
                 </div>
 
                 {/* Submit Button */}
-                <button type="submit" className="signin-button"
-                        disabled={ emailError.length > 1 && usernameError.length > 1 && passwordError.length > 1}>
+                <button type="submit" className={classNames("signin-button", { 'disabled': !formData.email || !formData.username || !formData.password })}
+                        disabled={ emailError.length > 1 || usernameError.length > 1 || passwordError.length > 1}>
                     Sign Up
                 </button>
             </form>
