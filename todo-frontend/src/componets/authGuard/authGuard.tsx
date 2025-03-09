@@ -1,12 +1,12 @@
 import {Navigate} from "react-router-dom";
 import React, {JSX} from "react";
 import store from "../../store";
-
+import Cookie from "js-cookie";
 
 const UnAuthenticatedGuard: React.FC<{ children: JSX.Element}> = ({children}) => {
-    const isLoggedIn = store.getState().user.loggedIn;
+    const isLoggedIn = Cookie.get("accessToken");
 
-    if(isLoggedIn){
+    if(!!isLoggedIn){
         return <Navigate to="/todo-list" replace={true} />
     }
 
