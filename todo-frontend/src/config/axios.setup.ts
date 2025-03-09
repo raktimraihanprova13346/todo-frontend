@@ -7,23 +7,30 @@ const axiosInstance = axios.create();
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        console.log("loader called")
-        store.dispatch(setLoading(true))
+        if(!store.getState().loader.loading){
+            store.dispatch(setLoading(true))
+        }
         return config;
     },
     (error) => {
-        store.dispatch(setLoading(false))
+        if(store.getState().loader.loading){
+            store.dispatch(setLoading(false))
+        }
         return Promise.reject(error);
     }
 );
 
 axiosInstance.interceptors.response.use(
     (response) => {
-        store.dispatch(setLoading(false))
+        if(store.getState().loader.loading){
+            store.dispatch(setLoading(false))
+        }
         return response;
     },
     (error) => {
-        store.dispatch(setLoading(false))
+        if(store.getState().loader.loading){
+            store.dispatch(setLoading(false))
+        }
         return Promise.reject(error);
     }
 );

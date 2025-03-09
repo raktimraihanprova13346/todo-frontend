@@ -2,15 +2,17 @@ import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {Route, Routes} from "react-router-dom";
-import LoginPage from "./pages/LoginPage/loginPage";
+import LoginPage from "./pages/./loginPage/loginPage";
 import TodoList from "./pages/todoList/todoList";
 import ProtectedRoute from "./componets/protectedRoute/protectedRoute";
+import SignUp from "./pages/signUp/signUp";
 
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<LoginPage />}></Route>
+          <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/todo-list"
           element={
             <ProtectedRoute>

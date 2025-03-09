@@ -29,8 +29,8 @@ const LoginPage: React.FC = () => {
         e.preventDefault();
 
         const loginCredential: LoginCredentials = {
-            email,
-            password
+            email: email,
+            password: password,
         };
 
         try {
@@ -87,6 +87,7 @@ const LoginPage: React.FC = () => {
                     </div>
                     <button type="submit" disabled={ emailError.length > 1 }>Submit</button>
                 </form>
+                <p>Don't have an account? <a href="/signup">Sign up</a></p>
             </div>
         </div>
     );
