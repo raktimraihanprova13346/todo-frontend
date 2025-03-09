@@ -78,7 +78,8 @@ const SignUpPage: React.FC = () => {
                 navigate("/");
             });
         } catch (error: Error | any){
-            const errorMessage = error.response?.data?.message || "Sign up failed. Please try again";
+            console.log(error);
+            const errorMessage = error?.message || "Sign up failed. Please try again";
             setResponse(errorMessage);
             Swal.fire({
                 title: 'Sign up failed',
