@@ -1,0 +1,53 @@
+.todo-page {
+  display: flex;
+  height: 100vh;
+  width: 90%;
+}
+
+.left-menu {
+  flex: 1;
+  background-color: #f4f4f4;
+  border-right: 1px solid #ddd;
+  text-align: start;
+  padding: 20% 20px 20px 20px;
+  display: table-column-group;
+}
+
+.left-menu h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.left-menu ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.left-menu li {
+  margin: 10px 0;
+  cursor: pointer;
+  font-size: 1.2rem;
+}
+
+.right-todo-list {
+  flex: 8;
+  padding: 20px;
+  background-color: #ffffff;
+}
+
+.right-todo-list h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.right-todo-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.right-todo-list li {
+  margin: 10px 0;
+  font-size: 1.1rem;
+}

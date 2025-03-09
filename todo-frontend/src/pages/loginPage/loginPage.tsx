@@ -3,10 +3,10 @@ import SignInServices, {SignedInUser} from "../../services/signIn";
 import {LoginCredentials} from "../../services/signIn";
 import "./loginPage.scss";
 import {login} from "../../slices/userSlice";
-import store from "../../store";
 import Swal from "sweetalert2";
 import {useNavigate} from "react-router-dom";
 import classNames from "classnames";
+import {useDispatch} from "react-redux";
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -14,6 +14,7 @@ const LoginPage: React.FC = () => {
     const [emailError, setEmailError] = useState<string>("");
     const [passwordError, setPasswordError] = useState<string>("");
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -36,7 +37,7 @@ const LoginPage: React.FC = () => {
 
         try {
             const user: SignedInUser = await SignInServices.login(loginCredential);
-            store.dispatch(login(user));
+            dispatch(login(user));
             Swal.fire({
                 title: 'Login Successful',
                 text: 'You will be redirected to the home page in a few seconds',

@@ -43,6 +43,7 @@ const userSlice = createSlice({
         },
 
         logout: (state) => {
+            Cookie.remove('accessToken');
             state.username = '';
             state.emailAddress = '';
             state.updatedAt = new Date();
