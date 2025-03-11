@@ -4,35 +4,19 @@ import store from "../../store";
 import {useNavigate} from "react-router-dom";
 import {logout} from "../../slices/userSlice";
 import {useDispatch} from "react-redux";
+import Menus from "../../componets/menus/menus";
 
 const TodoList: React.FC = ()=> {
     const userName = store.getState().user.username;
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const redirectToDoList = () => {
-        navigate("/todo-list", { replace: true })
-    }
-
-    const logoutAction = () => {
-        dispatch(logout());
-        navigate("/", {replace: true});
-    }
 
     return(
         <div className="todo-page"> {/* Parent container */}
             {/* Left Section: Menu */}
             <div className="left-menu">
-                <h2>
-                   Welcome: <br/>
-                   {userName}
-                </h2>
-                <h2>Menu</h2>
-                <ul>
-                    <li onClick={redirectToDoList}>ToDo List</li>
-                    <li>Tag</li>
-                    <li onClick={logoutAction}>Logout</li>
-                </ul>
+                <Menus />
             </div>
 
             {/* Right Section: To-Do List */}

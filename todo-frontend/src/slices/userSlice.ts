@@ -1,4 +1,4 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, Draft, PayloadAction, Slice} from "@reduxjs/toolkit";
 import Cookie from "js-cookie";
 
 interface User {
@@ -19,11 +19,11 @@ const initialState: User = {
     accessToken: ''
 }
 
-const userSlice = createSlice({
+const userSlice: Slice<User> = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        login: (state,
+        login: (state: Draft<User>,
                 action: PayloadAction<{
                     username: string,
                     email: string,
@@ -42,7 +42,7 @@ const userSlice = createSlice({
             });
         },
 
-        logout: (state) => {
+        logout: (state: Draft<User>, action: PayloadAction<boolean>) => {
             Cookie.remove('accessToken');
             state.username = '';
             state.emailAddress = '';

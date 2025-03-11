@@ -1,4 +1,5 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice, Draft, PayloadAction, Slice} from "@reduxjs/toolkit";
+import Loader from "../componets/loader/loader";
 
 interface LoaderState {
     loading: boolean;
@@ -8,11 +9,11 @@ const initialState: LoaderState = {
     loading: false
 }
 
-const loaderSlice = createSlice({
+const loaderSlice: Slice<LoaderState> = createSlice({
     name: "loader",
     initialState,
     reducers: {
-        setLoading: (state, action: PayloadAction<boolean>) => {
+        setLoading: (state: Draft<LoaderState>, action: PayloadAction<boolean>) => {
             state.loading = action.payload;
         }
     }

@@ -1,0 +1,55 @@
+
+@mixin flex-container {
+  display: flex;
+  height: 100%;
+  width: 98%;
+}
+
+@mixin flex-container-left {
+  background-color: #f4f4f4;
+  text-align: start;
+  padding: 50% 20px 20px 20px;
+  height: 100%;
+  border-right: 1px solid #ddd;
+  flex: 1;
+  flex-direction: column;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+}
+
+@mixin flex-container-right {
+  flex: 8;
+  padding: 20px;
+  background-color: #ffffff;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  li {
+    margin: 10px 0;
+    font-size: 1.1rem;
+  }
+}

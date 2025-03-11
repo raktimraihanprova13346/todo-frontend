@@ -1,6 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
 import {Route, Routes} from "react-router-dom";
 import LoginPage from "./pages/./loginPage/loginPage";
 import TodoList from "./pages/todoList/todoList";
@@ -8,6 +7,8 @@ import ProtectedRoute from "./componets/protectedRoute/protectedRoute";
 import SignUp from "./pages/signUp/signUp";
 import UnAuthenticatedGuard from "./componets/authGuard/authGuard";
 import NotFound from "./pages/notFound/notFound";
+import TagList from "./pages/tagList/tags";
+import TagAdd from "./pages/tagAdd/tagAdd";
 
 function App() {
   return (
@@ -32,6 +33,18 @@ function App() {
             </ProtectedRoute>
           }>
         </Route>
+
+        <Route path="/tags" element={
+            <ProtectedRoute>
+                <TagList />
+            </ProtectedRoute>}>
+        </Route>
+
+          <Route path="/add-tag" element={
+              <ProtectedRoute>
+                  <TagAdd />
+              </ProtectedRoute>}>
+          </Route>
 
         <Route path="*" element={<NotFound />} />
 

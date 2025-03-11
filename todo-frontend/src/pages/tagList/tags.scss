@@ -1,0 +1,10 @@
+@use '../../styles/mixing/mixing';
+.tags{
+  &-container{
+    @include mixing.flex-container
+  }
+
+  &-container-right{
+    @include mixing.flex-container-right
+  }
+}
