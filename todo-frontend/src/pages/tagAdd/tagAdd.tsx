@@ -34,7 +34,7 @@ const TadAdd: React.FC = () => {
                     navigate("/tags");
                 });
             } catch (error: Error | any) {
-                const errorMessage = error?.message || "Tag could not be addes. Please try again";
+                const errorMessage = error?.message || "Tag could not be added. Please try again";
                 Swal.fire({
                     title: 'Tag could not be added',
                     text: errorMessage,
