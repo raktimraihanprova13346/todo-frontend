@@ -12,7 +12,7 @@ const Menus = () => {
     const redirectToDoList = () => {
         navigate("/todo-list", { replace: true })
     }
-    const redirectToTags = () => {
+    const redirectToTagsList = () => {
         navigate("/tags");
     }
     const logoutAction = () => {
@@ -20,8 +20,12 @@ const Menus = () => {
         navigate("/", {replace: true});
     }
 
-    function redirectToAddTag() {
+    const redirectToAddTag = () => {
         navigate("/add-tag");
+    }
+
+    const redirectToAddToDo = () => {
+        navigate("/add-todo");
     }
 
     return (
@@ -34,11 +38,11 @@ const Menus = () => {
               <li>
                   <h3 onClick={redirectToDoList}> ToDo List </h3>
                   <ul>
-                      <li> Add Todo </li>
+                      <li onClick={redirectToAddToDo}> Add Todo </li>
                   </ul>
               </li>
               <li>
-                  <h3 onClick={redirectToTags}>Tag</h3>
+                  <h3 onClick={redirectToTagsList}>Tag</h3>
                   <ul>
                       <li onClick={redirectToAddTag}> Add Tag </li>
                   </ul>

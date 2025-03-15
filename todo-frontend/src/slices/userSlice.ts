@@ -1,14 +1,6 @@
 import {createSlice, Draft, PayloadAction, Slice} from "@reduxjs/toolkit";
 import Cookie from "js-cookie";
-
-interface User {
-    username: string;
-    emailAddress: string;
-    updatedAt: Date;
-    createdAt: Date;
-    loggedIn: boolean;
-    accessToken: string;
-}
+import {User} from "../dto/user.dto";
 
 const initialState: User = {
     username: '',

@@ -10,5 +10,5 @@ export const API_URL = {
     addTodo: BASE_URL+'/todo/add',
     getTodo: BASE_URL+'/todo/get',
     deleteTodo: BASE_URL+'/todo/delete',
-    updateTodo: BASE_URL+'/todo/update'
+    updateTodo: BASE_URL+'/todo/update',
 };

@@ -9,6 +9,7 @@ import UnAuthenticatedGuard from "./componets/authGuard/authGuard";
 import NotFound from "./pages/notFound/notFound";
 import TagList from "./pages/tagList/tags";
 import TagAdd from "./pages/tagAdd/tagAdd";
+import TodoAdd from "./pages/todoAdd/todoAdd";
 
 function App() {
   return (
@@ -43,6 +44,12 @@ function App() {
           <Route path="/add-tag" element={
               <ProtectedRoute>
                   <TagAdd />
+              </ProtectedRoute>}>
+          </Route>
+
+          <Route path="/add-todo" element={
+              <ProtectedRoute>
+                  <TodoAdd />
               </ProtectedRoute>}>
           </Route>
 
