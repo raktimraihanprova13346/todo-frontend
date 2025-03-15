@@ -5,6 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {logout} from "../../slices/userSlice";
 import {useDispatch} from "react-redux";
 import Menus from "../../componets/menus/menus";
+import TodoCard from "../../componets/todoCard/todoCard";
 
 const TodoList: React.FC = ()=> {
     const userName = store.getState().user.username;
@@ -21,12 +22,18 @@ const TodoList: React.FC = ()=> {
 
             {/* Right Section: To-Do List */}
             <div className="right-todo-list">
-                <h2>To-Do List</h2>
-                <ul>
-                    <li>Task 1</li>
-                    <li>Task 2</li>
-                    <li>Task 3</li>
-                </ul>
+                <TodoCard
+                    title="To-Do List"
+                    content="This is the To-Do List"
+                    deadline={new Date('2025-03-15T16:24:31.261Z')}
+                    status="Complete"
+                    updateDate={new Date('2025-03-15T16:24:31.261Z')}
+                    completionDate={new Date('2025-03-15T16:24:31.261Z')}
+                    tagID = {[76,73,72]}
+                />
+
+
+
             </div>
         </div>
     )

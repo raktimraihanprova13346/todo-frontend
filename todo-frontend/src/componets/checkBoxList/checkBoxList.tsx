@@ -8,12 +8,13 @@ interface CheckboxItem {
 
 interface CheckboxListProps {
     items: CheckboxItem[];
+    selectedIdList: number[];
     onSelectedChange: (selectedIds: number[]) => void;
 }
 
-const CheckBoxList:React.FC<CheckboxListProps> = ({ items, onSelectedChange }) => {
+const CheckBoxList:React.FC<CheckboxListProps> = ({ items, onSelectedChange, selectedIdList }) => {
 
-    const [selectedIds, setSelectedIds] = useState<number[]>([]);
+    const [selectedIds, setSelectedIds] = useState<number[]>(selectedIdList);
 
     const handleCheckboxChange = (id: number, checked: boolean) => {
         let updatedSelectedIds;
@@ -29,20 +30,25 @@ const CheckBoxList:React.FC<CheckboxListProps> = ({ items, onSelectedChange }) =
     };
 
     return (
-        <div>
-            {items.map((item) => (
-                <div key={item.id}>
-                    <label>
+        <div className="checkbox-container">
+            <div className="checkbox-item-container">
+                {items.map((item) => (
+                    <div key={item.id} className="checkbox-item">
                         <input
                             type="checkbox"
+                            checked={selectedIdList.includes(item.id)}
                             value={item.id}
                             onChange={(e) => handleCheckboxChange(item.id, e.target.checked)}
                         />
-                        {item.label}
-                    </label>
-                </div>
-            ))}
+                        <label>
+                            {item.label}
+                        </label>
+                    </div>
+                ))}
+            </div>
         </div>
-    );
 
+    );
 }
+
+export default CheckBoxList;

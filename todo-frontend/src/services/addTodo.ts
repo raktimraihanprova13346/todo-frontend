@@ -15,7 +15,7 @@ export interface TodoAddResp {
 }
 
 export class AddTodoServices{
-    async addTodo(todo: ToDoAddReq){
+    static async addTodo(todo: ToDoAddReq){
         try{
             const token = Cookies.get("accessToken");
             const response = await axiosInstance.post(API_URL.addTodo, todo,{
