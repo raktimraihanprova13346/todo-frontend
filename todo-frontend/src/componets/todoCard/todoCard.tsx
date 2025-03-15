@@ -4,6 +4,8 @@ import store from "../../store";
 import {TagArray} from "../../dto/tag.dto";
 import {GetTagList} from "../../services/getTagList";
 import CheckBoxList from "../checkBoxList/checkBoxList";
+import "react-datepicker/dist/react-datepicker.css";
+import DatePicker from "react-datepicker";
 
 interface TagListProps {
     id: number;
@@ -33,7 +35,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
     const [isContentEditing, setIsContentEditing] = useState(false);
     const [currentTitle, setCurrentTitle] = useState(todoCardProps.title);
     const [currentContent, setCurrentContent] = useState(todoCardProps.content);
-    const [currentDeadline, setCurrentDeadline] = useState(formatter.format(new Date(todoCardProps.deadline)));
+    const [currentDeadline, setCurrentDeadline] = useState(new Date(todoCardProps.deadline));
     const [currentStatus, setCurrentStatus] = useState(todoCardProps.status);
     const [currentTagIds, setCurrentTagIds] = useState<number[]>(todoCardProps.tagID);
     const [tagListProps, setTagListProps] = useState<TagListProps[]>([]);
@@ -139,7 +141,21 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
             <div className="todo-card-footer">
                 <div>
                     <div>
-                        <p><span>Deadline: </span>{currentDeadline}</p>
+                            {isEditing ? (
+                                <>
+                                    <label htmlFor="deadline" >Deadline:</label>
+                                    <DatePicker
+                                        selected={currentDeadline as Date}
+                                        showTimeSelect
+                                        onChange={handleBlur}
+                                        dateFormat="Pp"
+                                        className="datepicker"
+                                        minDate={new Date()}
+                                    />
+                                </>
+                            ) : (
+                                <p><span>Deadline: </span>{formatter.format(currentDeadline)}</p>
+                            )}
                         <p><span>Updated: </span>{formatter.format(todoCardProps.updateDate)}</p>
                     </div>
 
