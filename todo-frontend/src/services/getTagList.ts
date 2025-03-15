@@ -16,7 +16,7 @@ export class GetTagList {
                 tags: response.data,
             };
         }catch(error: any){
-            throw new Error(error.response?.data?.message || 'Todo Could not be added.');
+            throw new Error(error.response?.data?.message || 'Tag Could not be fetched.');
         }
     }
 }

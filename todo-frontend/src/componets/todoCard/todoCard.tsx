@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "./todoCard.scss";
 import store from "../../store";
 import {TagArray} from "../../dto/tag.dto";
@@ -6,12 +6,16 @@ import {GetTagList} from "../../services/getTagList";
 import CheckBoxList from "../checkBoxList/checkBoxList";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
+import UpdateTodoServices, {TodoUpdateReq, TodoUpdateResp} from "../../services/updateTodo";
+import Swal from "sweetalert2";
+import {DeleteTodoReq, DeleteTodoServices} from "../../services/deleteTodo";
 
 interface TagListProps {
     id: number;
     label: string;
 }
 interface TodoCardProps {
+    id: number;
     title: string;
     content: string;
     deadline: Date;
@@ -19,6 +23,7 @@ interface TodoCardProps {
     updateDate: Date;
     completionDate: Date;
     tagID: number[];
+    onDeleted: (deleteId: number) => void;
 }
 const formatter = new Intl.DateTimeFormat("EN", {
     year: "numeric",
@@ -40,6 +45,10 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
     const [currentTagIds, setCurrentTagIds] = useState<number[]>(todoCardProps.tagID);
     const [tagListProps, setTagListProps] = useState<TagListProps[]>([]);
     const [tagFetchingError, setTagFetchingError] = useState<string>();
+    const [isEditingDate, setIsEditingDate] = useState(false);
+    const [isEditingTag, setIsEditingTag] = useState(false);
+    const [currentCompletionDate, setCurrentCompletionDate] = useState<Date>(todoCardProps.completionDate);
+    const timerId = useRef<NodeJS.Timeout | null>(null);
 
     const emailAddress: string = store.getState().user.emailAddress;
 
@@ -61,22 +70,71 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
         fetchData();
     },[]);
 
+    const updateData = async () => {
+        const todoUpdateReq: TodoUpdateReq = {
+            id: todoCardProps.id,
+            title: currentTitle.trim(),
+            content: currentContent.trim(),
+            status: currentStatus === "Incomplete" ? "Incomplete" : "Complete",
+            deadline: currentDeadline,
+            completedDate: currentCompletionDate,
+            emailAddress: emailAddress,
+            overdue: currentDeadline < currentCompletionDate,
+            tagID: currentTagIds,
+        };
+
+        try {
+            const response: TodoUpdateResp = await UpdateTodoServices.updateTodo(todoUpdateReq);
+        } catch (error) {
+            Swal.fire({
+                title: 'Data could not be updated.',
+                text: 'Please try again later.',
+                icon: 'error',
+                showConfirmButton: true,
+            })
+        }
+    }
+
     const handleOnTagSelection = (selectedIds: number[]) => {
         setCurrentTagIds(selectedIds);
-        console.log(selectedIds);
     }
 
     const handleContentClick = () => {
         setIsContentEditing(true);
         setIsEditing(false);
+        setIsEditingDate(false);
+        setIsEditingTag(false);
     }
 
     const handleTitleClick = () => {
         setIsEditing(true);
         setIsContentEditing(false);
+        setIsEditingDate(false);
+        setIsEditingTag(false);
     };
 
-    const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleDateOnClick = () => {
+        setIsEditingDate(true);
+        setIsEditing(false);
+        setIsContentEditing(false);
+        setIsEditingTag(false);
+    }
+
+    const handleTagClick = () => {
+        setIsEditing(false);
+        setIsContentEditing(false);
+        setIsEditingDate(false);
+        setIsEditingTag(true);
+    };
+
+    const handleStatusClick = () => {
+        setIsEditing(false);
+        setIsContentEditing(false);
+        setIsEditingDate(false);
+        setIsEditingTag(false);
+    };
+
+    const handleTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCurrentTitle(e.target.value);
     };
 
@@ -84,34 +142,80 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
         setCurrentContent(e.target.value);
     };
 
-    const handleBlur = () => {
+    const handleDateChange = (date : Date | null) => {
+        if (date) {
+            setCurrentDeadline(date);
+        }
+    }
+
+    const handleBlur = async () => {
+        await updateData();
         setIsEditing(false);
-        // Add logic to save title, e.g., API call
     };
 
-    const handleContentBlur = () => {
+    const handleTagSelectionBlur = async () => {
+        if(timerId.current){
+            clearTimeout(timerId.current);
+        }
+        timerId.current = setTimeout(
+            async () => {
+                setIsEditingTag(false);
+                await updateData()
+                timerId.current = null;
+            },3000);
+    }
+
+    const handleDateBlur = async () => {
+        await updateData();
+        setIsEditingDate(false);
+    }
+
+    const handleContentBlur = async () => {
+        await updateData();
         setIsContentEditing(false);
-        // Add logic to save title, e.g., API call
     };
 
     // Handle status change
-    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         setCurrentStatus(e.target.value);
-        // Add logic to update status, e.g., API call
+        if (e.target.value === 'Complete') {
+            setCurrentCompletionDate(new Date());
+            await updateData();
+        }
     };
+
+    const handleDeleteTodo = async () => {
+        const deleteTodoReq: DeleteTodoReq = {
+            emailAddress: emailAddress,
+            id: todoCardProps.id
+        }
+        try {
+            const response = await DeleteTodoServices.deleteTodo(deleteTodoReq);
+            todoCardProps.onDeleted(deleteTodoReq.id);
+        } catch (error) {
+            Swal.fire({
+                title: 'Data could not be updated.',
+                text: 'Please try again later.',
+                icon: 'error',
+                showConfirmButton: true,
+            })
+        }
+    }
 
     return (
         <div className="todo-card">
             {/* Header with editable title */}
             <div className="todo-card-header">
                 {isEditing ? (
-                    <input
-                        type="text"
-                        value={currentTitle}
-                        onChange={handleInput}
-                        onBlur={handleBlur}
-                        className="todo-card-title--editing"
-                    />
+                    <div>
+                        <input
+                            type="text"
+                            value={currentTitle}
+                            onChange={handleTitleInput}
+                            onBlur={handleBlur}
+                            className="todo-card-title--editing"
+                        />
+                    </div>
                 ) : (
                     <span className="todo-card-title" onClick={handleTitleClick}>
                         {currentTitle}
@@ -122,14 +226,16 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
             {/* Content section */}
             <div className="todo-card-content">
                 {isContentEditing ? (
-                    <textarea
-                        value={currentContent}
-                        onChange={e =>  handleContentInput(e)}
-                        onBlur={handleContentBlur}
-                        className="todo-card-content--editing"
-                        rows={6}
-                        cols={50}
-                    />
+                    <div>
+                        <textarea
+                            value={currentContent}
+                            onChange={e =>  handleContentInput(e)}
+                            onBlur={handleContentBlur}
+                            className="todo-card-content--editing"
+                            rows={6}
+                            cols={50}
+                        />
+                    </div>
                 ) : (
                     <span className="todo-card-content" onClick={handleContentClick}>
                         {currentContent}
@@ -141,40 +247,77 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
             <div className="todo-card-footer">
                 <div>
                     <div>
-                            {isEditing ? (
+                            {isEditingDate ? (
                                 <>
                                     <label htmlFor="deadline" >Deadline:</label>
                                     <DatePicker
                                         selected={currentDeadline as Date}
                                         showTimeSelect
-                                        onChange={handleBlur}
+                                        onChange={handleDateChange}
+                                        onBlur={handleDateBlur}
                                         dateFormat="Pp"
                                         className="datepicker"
                                         minDate={new Date()}
                                     />
                                 </>
                             ) : (
-                                <p><span>Deadline: </span>{formatter.format(currentDeadline)}</p>
+                                <p onClick={handleDateOnClick}><span>Deadline: </span>{formatter.format(currentDeadline)}</p>
                             )}
                         <p><span>Updated: </span>{formatter.format(todoCardProps.updateDate)}</p>
                     </div>
-
                     {todoCardProps.completionDate && (
                         <p>
                             <span>Completed: </span>
-                            {`${formatter.format(todoCardProps.completionDate)}`}
+                            {`${formatter.format(currentCompletionDate)}`}
                         </p>
                     )}
                 </div>
-                <CheckBoxList items={tagListProps} onSelectedChange={handleOnTagSelection} selectedIdList={currentTagIds}/>
-                <select
-                    className="status-dropdown"
-                    value={currentStatus}
-                    onChange={handleStatusChange}
-                >
-                    <option value="Incomplete">In Progress</option>
-                    <option value="Complete">Completed</option>
-                </select>
+                {
+                    isEditingTag ? (
+                            <div onBlur={handleTagSelectionBlur}>
+                                <CheckBoxList
+                                    items={tagListProps}
+                                    onSelectedChange={handleOnTagSelection}
+                                    selectedIdList={currentTagIds}
+                                />
+                            </div>
+                    ): (
+                        <div onClick={handleTagClick} >
+                            <p><span>Status: </span>{currentStatus}</p>
+                            <p><span>Tags: </span>{ currentTagIds.map(
+                                tagId =>
+                                    tagListProps.filter(tagListProps => tagId === tagListProps.id).map(tag => tag.label).join(", ")
+                            ).join(", ")}</p>
+                        </div>
+                    )
+                }
+
+                <div>
+                    <select
+                        className="status-dropdown"
+                        value={currentStatus}
+                        onChange={handleStatusChange}
+                    >
+                        <option value="Incomplete">In Progress</option>
+                        <option value="Complete">Completed</option>
+                    </select>
+                    <button
+                        className="delete-todo-btn"
+                        onClick={handleDeleteTodo}
+                        style={{
+                            padding: '8px 12px',
+                            border: 'none',
+                            borderRadius: '4px',
+                            background: '#ff4d4f',
+                            color: '#fff',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
             </div>
         </div>
     );
