@@ -23,11 +23,11 @@ export class GetTodoPaginated{
     static async getPaginatedTodoList (paginatedTodoReq: PaginatedToDoRequest): Promise<PaginatedToDoResponse> {
         try{
             const token = Cookies.get("accessToken");
-            const response = await axiosInstance.post(API_URL.getTodo, {paginatedTodoReq},{
+            const response = await axiosInstance.post(API_URL.getTodo, paginatedTodoReq, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            })
+            });
             return response.data;
         }catch(error: any){
             throw new Error(error.response?.data?.message || 'Todo list could not be fetched.');

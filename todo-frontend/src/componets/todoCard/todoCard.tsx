@@ -142,9 +142,10 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
         setCurrentContent(e.target.value);
     };
 
-    const handleDateChange = (date : Date | null) => {
+    const handleDateChange = async (date: Date | null) => {
         if (date) {
             setCurrentDeadline(date);
+            await updateData();
         }
     }
 
@@ -178,7 +179,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
     // Handle status change
     const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
         setCurrentStatus(e.target.value);
-        if (e.target.value === 'Complete') {
+        if (e.target.value === 'Complete' || e.target.value === 'Incomplete') {
             setCurrentCompletionDate(new Date());
             await updateData();
         }
@@ -254,7 +255,6 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                                         selected={currentDeadline as Date}
                                         showTimeSelect
                                         onChange={handleDateChange}
-                                        onBlur={handleDateBlur}
                                         dateFormat="Pp"
                                         className="datepicker"
                                         minDate={new Date()}

@@ -5,8 +5,9 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* Ensures the div takes up the full viewport height */
+  height: auto;
+  overflow: visible;
   text-align: center;
-
+  min-height: 100vh;
 }
 
