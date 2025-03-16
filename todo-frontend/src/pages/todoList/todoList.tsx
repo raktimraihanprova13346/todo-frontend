@@ -1,9 +1,6 @@
-import React, {ChangeEventHandler, useEffect, useState} from "react";
+import React, { useEffect, useState} from "react";
 import "./todoList.scss";
 import store from "../../store";
-import {useNavigate} from "react-router-dom";
-import {logout} from "../../slices/userSlice";
-import {useDispatch} from "react-redux";
 import Menus from "../../componets/menus/menus";
 import TodoCard from "../../componets/todoCard/todoCard";
 import ReactPaginate from "react-paginate";
