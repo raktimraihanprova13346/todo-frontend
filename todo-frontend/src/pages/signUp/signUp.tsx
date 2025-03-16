@@ -151,7 +151,7 @@ const SignUpPage: React.FC = () => {
                     Sign Up
                 </button>
             </form>
-            <p>Already have an account? <a href="/">Login</a></p>
+            <p>Already have an account? <a onClick={() => navigate("/")}>Login</a></p>
         </div>
     );
 

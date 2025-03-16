@@ -2,9 +2,12 @@ import {createSlice, Draft, PayloadAction, Slice} from "@reduxjs/toolkit";
 import Cookie from "js-cookie";
 import {User} from "../dto/user.dto";
 
+const storedEmail = localStorage.getItem("emailAddress");
+const storedUserName = localStorage.getItem("userName");
+
 const initialState: User = {
-    username: '',
-    emailAddress: '',
+    username: storedUserName ? storedUserName : '',
+    emailAddress: storedEmail ? storedEmail : '',
     updatedAt: new Date(),
     createdAt: new Date(),
     loggedIn: false,
@@ -32,6 +35,9 @@ const userSlice: Slice<User> = createSlice({
             Cookie.set('accessToken', action.payload.accessToken, {
                 expires: 1,
             });
+            localStorage.setItem("emailAddress", action.payload.email);
+            localStorage.setItem("userName", action.payload.username);
+
         },
 
         logout: (state: Draft<User>, action: PayloadAction<boolean>) => {
@@ -42,6 +48,9 @@ const userSlice: Slice<User> = createSlice({
             state.createdAt = new Date();
             state.loggedIn = false;
             state.accessToken = '';
+
+            localStorage.removeItem("emailAddress");
+            localStorage.removeItem("userName");
         }
     }
 });
