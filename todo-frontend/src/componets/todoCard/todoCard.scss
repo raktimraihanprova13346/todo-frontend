@@ -7,6 +7,11 @@
   margin-bottom: 10px;
   gap: 10px;
 
+  &-overdue{
+    background: #dc5858;
+    color: #fff;
+  }
+
   &-header {
     justify-content: space-between;
   }
@@ -70,4 +75,9 @@
   color: #fff;
   cursor: pointer;
   width: 30%;
+}
+
+.todo-card-overdue *:not(select),
+>div:not(.react-datepicker), >div:not(.react-datepicker__month-container) {
+  color: #ffffff!important;
 }

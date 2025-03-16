@@ -9,6 +9,7 @@ import DatePicker from "react-datepicker";
 import UpdateTodoServices, {TodoUpdateReq, TodoUpdateResp} from "../../services/updateTodo";
 import Swal from "sweetalert2";
 import {DeleteTodoReq, DeleteTodoServices} from "../../services/deleteTodo";
+import classNames from "classnames";
 
 interface TagListProps {
     id: number;
@@ -36,12 +37,13 @@ const formatter = new Intl.DateTimeFormat("EN", {
 });
 
 const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
+    type StatusType = "Incomplete" | "Complete";
     const [isEditing, setIsEditing] = useState(false);
     const [isContentEditing, setIsContentEditing] = useState(false);
     const [currentTitle, setCurrentTitle] = useState(todoCardProps.title);
     const [currentContent, setCurrentContent] = useState(todoCardProps.content);
     const [currentDeadline, setCurrentDeadline] = useState(new Date(todoCardProps.deadline));
-    const [currentStatus, setCurrentStatus] = useState(todoCardProps.status);
+    const [currentStatus, setCurrentStatus] = useState<StatusType >(todoCardProps.status as StatusType);
     const [currentTagIds, setCurrentTagIds] = useState<number[]>(todoCardProps.tagID);
     const [tagListProps, setTagListProps] = useState<TagListProps[]>([]);
     const [tagFetchingError, setTagFetchingError] = useState<string>();
@@ -50,6 +52,8 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
     const [currentCompletionDate, setCurrentCompletionDate] = useState<Date>(todoCardProps.completionDate);
     const [currentUpdateDate, setCurrentUpdateDate] = useState<Date>(todoCardProps.updateDate);
     const timerId = useRef<NodeJS.Timeout | null>(null);
+    const [titleSaveError, setTitleSaveError] = useState("");
+    const [contentSaveError, setContentSaveError] = useState("");
 
     const emailAddress: string = store.getState().user.emailAddress;
 
@@ -76,7 +80,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
             id: todoCardProps.id,
             title: currentTitle.trim(),
             content: currentContent.trim(),
-            status: currentStatus === "Incomplete" ? "Incomplete" : "Complete",
+            status: currentStatus,
             deadline: currentDeadline,
             completedDate: currentCompletionDate,
             emailAddress: emailAddress,
@@ -85,8 +89,28 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
         };
 
         try {
-            const response: TodoUpdateResp = await UpdateTodoServices.updateTodo(todoUpdateReq);
-            setCurrentUpdateDate(new Date());
+            if(todoUpdateReq.content.length > 10 && todoUpdateReq.title.length > 3){
+                const response: TodoUpdateResp = await UpdateTodoServices.updateTodo(todoUpdateReq);
+                setCurrentUpdateDate(new Date());
+                setTitleSaveError("Title should be at least 4 characters long");
+                setTitleSaveError("");
+                setContentSaveError("");
+
+            }
+            else {
+                if(todoUpdateReq.title.length < 4){
+                    setTitleSaveError("Title should be at least 4 characters long");
+                }
+                if(todoUpdateReq.content.length < 10){
+                    setContentSaveError("Content should be at least 10 characters long");
+                }
+                Swal.fire({
+                    title: 'Title must be at least 3 characters long, and Content must be at least 10 characters long',
+                    text: 'Please try with valid data.',
+                    icon: 'error',
+                    showConfirmButton: true,
+                })
+            }
         } catch (error) {
             Swal.fire({
                 title: 'Data could not be updated.',
@@ -178,13 +202,16 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
         setIsContentEditing(false);
     };
 
-    // Handle status change
-    const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setCurrentStatus(e.target.value);
-        if (e.target.value === 'Complete' || e.target.value === 'Incomplete') {
+    const handleStatusOnBlur = async () => {
+        if (currentStatus) {
             setCurrentCompletionDate(new Date());
             await updateData();
         }
+    }
+
+    // Handle status change
+    const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setCurrentStatus(e.target.value as StatusType);
     };
 
     const handleDeleteTodo = async () => {
@@ -206,7 +233,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
     }
 
     return (
-        <div className="todo-card">
+        <div className = {classNames('todo-card', {'todo-card-overdue': (currentDeadline < new Date())})}>
             {/* Header with editable title */}
             <div className="todo-card-header">
                 {isEditing ? (
@@ -223,6 +250,9 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                     <span className="todo-card-title" onClick={handleTitleClick}>
                         {currentTitle}
                     </span>
+                )}
+                {titleSaveError && (
+                    <p style={{color: "red"}}>{titleSaveError}</p>
                 )}
             </div>
 
@@ -245,6 +275,9 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                     </span>
                 )}
             </div>
+            {contentSaveError && (
+                <p style={{color: "red"}}>{contentSaveError}</p>
+            )}
 
             {/* Footer section */}
             <div className="todo-card-footer">
@@ -299,6 +332,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                         className="status-dropdown"
                         value={currentStatus}
                         onChange={handleStatusChange}
+                        onBlur={handleStatusOnBlur}
                     >
                         <option value="Incomplete">In Progress</option>
                         <option value="Complete">Completed</option>

@@ -29,8 +29,6 @@ const TagList = () => {
             setTotalPages(resp.totalPages);
             setPageNumber(resp.page);
             setTag(resp.tags);
-            console.log(resp);
-            console.log(tag);
         } catch (error: Error | any) {
             Swal.fire({
                 title: 'List could not be fetched.',
@@ -46,7 +44,6 @@ const TagList = () => {
     },[pageNumber])
 
     const handleDelete = async (id: number) => {
-        console.log("Returned ID: "+ id);
         if (paginatedTags && paginatedTags.tags) {
             const deletedTagReq = {
                 id: id,
