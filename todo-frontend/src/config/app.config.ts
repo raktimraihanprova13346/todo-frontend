@@ -9,7 +9,7 @@ export const API_URL = {
     deleteTag: BASE_URL+'/tag/delete',
     updateTag: BASE_URL+'/tag/update',
     addTodo: BASE_URL+'/todo/add',
-    getTodo: BASE_URL+'/todo/get',
+    getTodo: BASE_URL+'/user/todo-list',
     deleteTodo: BASE_URL+'/todo/delete',
     updateTodo: BASE_URL+'/todo/update',
 };
