@@ -1,0 +1,45 @@
+@use '../../styles/mixing/mixing';
+.tags{
+  &-container{
+    @include mixing.flex-container
+  }
+
+  &-container-right{
+    @include mixing.flex-container-right
+  }
+}
+
+.pagination-container {
+  padding: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+  color: #666;
+
+  li {
+    margin: 0 5px;
+    cursor: pointer;
+
+    &.active {
+      font-weight: bold;
+      background: #b6aeae;;
+      color: white;
+      border-radius: 3px;
+      padding: 0 8px;
+    }
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  .prev-page,
+  .next-page {
+    font-weight: bold;
+  }
+}

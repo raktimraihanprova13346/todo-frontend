@@ -1,0 +1,13 @@
+@use 'styles/base/base';
+
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: auto;
+  overflow: visible;
+  text-align: center;
+  min-height: 100vh;
+}
+

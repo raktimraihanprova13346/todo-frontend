@@ -1,0 +1,42 @@
+@use "../../styles/mixing/mixing";
+
+.tagAdd-container {
+  @include mixing.flex-container;
+}
+
+.tagAdd-container-right {
+  @include mixing.flex-container-right;
+}
+
+.tagAdd-container-left {
+  @include mixing.flex-container-left;
+
+}
+
+.add-tag{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 80%;
+  width: 100%;
+  margin-top: 5px;
+  gap: 10px;
+
+  &-form{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+  &-label{
+    font-size: 1.2rem;
+  }
+  &-button.disabled{
+    cursor: not-allowed;
+    background-color: #ccc;
+    color: #666;
+  }
+}
