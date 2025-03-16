@@ -1,7 +1,11 @@
 import Menus from "../../componets/menus/menus";
 import "./tags.scss";
+import TagComponent from "../../componets/tag/tag";
 
 const TagList = () => {
+    const handleDelete = () => {
+
+    }
     return (
         <div className="tags-container">
             <div className= "tags-container-left">
@@ -9,7 +13,7 @@ const TagList = () => {
             </div>
 
             <div className="tags-container-right">
-                <h1>Hello</h1>
+                <TagComponent id={1} content="This is tag" onDelete={handleDelete} />
 
             </div>
         </div>

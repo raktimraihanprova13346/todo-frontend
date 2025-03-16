@@ -1,0 +1,42 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #e9e9e9;
+  border-radius: 16px;
+  padding: 8px 12px;
+  margin: 4px;
+  border: 1px solid #ccc;
+  width: 100%;
+
+  &:hover {
+    background-color: #f4f4f4; /* Lighter background on hover */
+  }
+}
+
+.tag-content {
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
+.tag-input {
+  border: 1px solid #ccc;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  outline: none;
+}
+
+.delete-button {
+  background-color: transparent;
+  border: none;
+  color: red;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+
+  &:hover {
+    color: darkred; /* Dark red on hover */
+  }
+}

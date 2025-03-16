@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {ChangeEventHandler, useEffect, useState} from "react";
 import "./todoList.scss";
 import store from "../../store";
 import {useNavigate} from "react-router-dom";
@@ -10,6 +10,10 @@ import ReactPaginate from "react-paginate";
 import {GetTodoPaginated, PaginatedToDoRequest, PaginatedToDoResponse} from "../../services/getTodoPaginated";
 import {Todo} from "../../dto/todo.dto";
 import Swal from "sweetalert2";
+import TagList from "../tagList/tags";
+import CheckBoxList, {CheckboxItem, CheckboxListProps} from "../../componets/checkBoxList/checkBoxList";
+import {Tag, TagArray} from "../../dto/tag.dto";
+import {GetTagList} from "../../services/getTagList";
 
 const TodoList: React.FC = ()=> {
     const [currentPageNumber, setPageNumber] = useState(1);
@@ -19,25 +23,20 @@ const TodoList: React.FC = ()=> {
     const [currentTagIds,setTagIds] = useState<number[]>([]);
     const [currentStatus,setStatus] = useState<'Complete' | 'Incomplete' | null>(null);
     const [todos, setTodos] = useState<Todo[]>([]);
+    const [checkBoxItem, setCheckBoxItem] = useState<CheckboxItem[]>([]);
+    const [selectedTagIdSearch, setSelectedTagIdSearch] = useState<number[]>([]);
 
     useEffect(() => {
-        const fetchTodos = async () => {
-            const paginatedTodoReq: PaginatedToDoRequest = {
-                pageNumber: currentPageNumber,
-                itemsPerPage: currentItemsPerPage,
-                emailAddress: emailAddress,
-                tagID: currentTagIds,
-                status: currentStatus
-            }
-
+        const fetchData = async () => {
             try {
-                const response = await GetTodoPaginated.getPaginatedTodoList(paginatedTodoReq);
-                if(response){
-                    setTodos(response.todos);
-                    setPageNumber(response.page);
-                    setTotalPages(response.totalPage);
+                const response: TagArray = await GetTagList.getTagList(emailAddress);
+                if(response.tags){
+                    const filteredTags: CheckboxItem[] = response.tags.map(tag => ({
+                        id: tag.id,
+                        label: tag.tagName.slice(0, 1).toUpperCase() + tag.tagName.slice(1, tag.tagName.length)
+                    }));
+                    setCheckBoxItem(filteredTags);
                 }
-                console.log(response);
             } catch (error: any) {
                 Swal.fire({
                     title: 'List could not be fetched.',
@@ -46,16 +45,67 @@ const TodoList: React.FC = ()=> {
                     showConfirmButton: true,
                 })
             }
-        };
+        }
+        fetchData();
+    },[]);
+
+    const fetchTodos = async () => {
+        const paginatedTodoReq: PaginatedToDoRequest = {
+            pageNumber: currentPageNumber,
+            itemsPerPage: currentItemsPerPage,
+            emailAddress: emailAddress,
+            tagID: currentTagIds,
+            status: currentStatus
+        }
+        try {
+            const response = await GetTodoPaginated.getPaginatedTodoList(paginatedTodoReq);
+            if(response){
+                setTodos(response.todos);
+                setPageNumber(response.page);
+                setTotalPages(response.totalPage);
+            }
+        } catch (error: any) {
+            Swal.fire({
+                title: 'List could not be fetched.',
+                text: 'Please Login again.',
+                icon: 'error',
+                showConfirmButton: true,
+            })
+        }
+    };
+
+    useEffect(() => {
         fetchTodos();
+    }, [currentPageNumber, currentTagIds, currentStatus]);
 
-    }, [currentPageNumber, todos])
-
-    const handleOnDeleteTodo = (e: number) => {
+    const handleOnDeleteTodo = async (e: number) => {
         const updatedTodos = todos.filter(todo => todo.id !== e)
         setTodos(updatedTodos);
+        if (currentPageNumber === 1) {
+            await fetchTodos();
+        }else{
+            setPageNumber(1);
+        }
     }
 
+    const handleStatusChange = (e : React.ChangeEvent<HTMLSelectElement>) => {
+        if(e.target.value === "All"){
+            setPageNumber(1);
+            setStatus(null);
+        }
+
+        else{
+            setPageNumber(1);
+            setStatus(e.target.value as 'Complete' | 'Incomplete');
+        }
+    }
+
+    const handleTagSelectionSearch = async (ids: number[]) => {
+        setPageNumber(1);
+        setSelectedTagIdSearch(ids);
+        setTagIds(ids);
+        console.log(currentTagIds);
+    }
 
     return(
         <div className="todo-page"> {/* Parent container */}
@@ -67,9 +117,22 @@ const TodoList: React.FC = ()=> {
             {/* Right Section: To-Do List */}
             <div className="right-todo-list">
 
+                <div className="search-container">
+                    <h2>Search By Status: </h2>
+                    <select
+                        name="status" id="status"
+                        onChange={handleStatusChange}>
+                        <option value="All">All</option>
+                        <option value="Complete">Complete</option>
+                        <option value="Incomplete">Incomplete</option>
+                    </select>
+                    <h2>Filter By Tag: </h2>
+                    <CheckBoxList items={checkBoxItem} selectedIdList={selectedTagIdSearch} onSelectedChange={handleTagSelectionSearch} />
+
+                </div>
+
                 <div className="pagination-container">
-
-
+                    <h2>To-Do List</h2>
                     <div>
                         {todos.map((todo:Todo) => (
                                 <TodoCard
@@ -87,7 +150,6 @@ const TodoList: React.FC = ()=> {
                             )
                         )}
                     </div>
-
 
                     <ReactPaginate
                         previousLabel={"← Previous"}

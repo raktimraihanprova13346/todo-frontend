@@ -1,12 +1,12 @@
 import "./checkBoxList.scss";
 import React, {useState} from "react";
 
-interface CheckboxItem {
+export interface CheckboxItem {
     id: number;
     label: string;
 }
 
-interface CheckboxListProps {
+export interface CheckboxListProps {
     items: CheckboxItem[];
     selectedIdList: number[];
     onSelectedChange: (selectedIds: number[]) => void;

@@ -48,6 +48,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
     const [isEditingDate, setIsEditingDate] = useState(false);
     const [isEditingTag, setIsEditingTag] = useState(false);
     const [currentCompletionDate, setCurrentCompletionDate] = useState<Date>(todoCardProps.completionDate);
+    const [currentUpdateDate, setCurrentUpdateDate] = useState<Date>(todoCardProps.updateDate);
     const timerId = useRef<NodeJS.Timeout | null>(null);
 
     const emailAddress: string = store.getState().user.emailAddress;
@@ -85,6 +86,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
 
         try {
             const response: TodoUpdateResp = await UpdateTodoServices.updateTodo(todoUpdateReq);
+            setCurrentUpdateDate(new Date());
         } catch (error) {
             Swal.fire({
                 title: 'Data could not be updated.',
@@ -163,7 +165,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                 setIsEditingTag(false);
                 await updateData()
                 timerId.current = null;
-            },3000);
+            },1000);
     }
 
     const handleDateBlur = async () => {
@@ -263,7 +265,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                             ) : (
                                 <p onClick={handleDateOnClick}><span>Deadline: </span>{formatter.format(currentDeadline)}</p>
                             )}
-                        <p><span>Updated: </span>{formatter.format(todoCardProps.updateDate)}</p>
+                        <p><span>Updated: </span>{formatter.format(currentUpdateDate)}</p>
                     </div>
                     {todoCardProps.completionDate && (
                         <p>
@@ -292,7 +294,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                     )
                 }
 
-                <div>
+                <div className="button-container">
                     <select
                         className="status-dropdown"
                         value={currentStatus}
@@ -304,14 +306,6 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                     <button
                         className="delete-todo-btn"
                         onClick={handleDeleteTodo}
-                        style={{
-                            padding: '8px 12px',
-                            border: 'none',
-                            borderRadius: '4px',
-                            background: '#ff4d4f',
-                            color: '#fff',
-                            cursor: 'pointer',
-                        }}
                     >
                         Delete
                     </button>
