@@ -17,19 +17,19 @@ import Cookie from "js-cookie";
 function App() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    useEffect(() => {
-        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-            window.alert("Are you sure you want to leave?");
-            event.preventDefault();
-            dispatch(logout(false));
-            Cookie.remove("accessToken");
-            navigate("/", {replace: true});
-        };
-        window.addEventListener("beforeunload", handleBeforeUnload);
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
-    },[dispatch]);
+    // useEffect(() => {
+    //     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+    //         window.alert("Are you sure you want to leave?");
+    //         event.preventDefault();
+    //         dispatch(logout(false));
+    //         Cookie.remove("accessToken");
+    //         navigate("/", {replace: true});
+    //     };
+    //     window.addEventListener("beforeunload", handleBeforeUnload);
+    //     return () => {
+    //         window.removeEventListener("beforeunload", handleBeforeUnload);
+    //     };
+    // },[dispatch]);
 
   return (
     <div className="App">

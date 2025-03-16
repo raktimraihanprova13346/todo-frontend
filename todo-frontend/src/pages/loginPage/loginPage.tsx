@@ -90,7 +90,7 @@ const LoginPage: React.FC = () => {
                     <button type="submit" className={classNames("signin-button",{ 'disabled': !email || !password })}
                             disabled={ emailError.length > 1 || passwordError.length > 1 }>Submit</button>
                 </form>
-                <p>Don't have an account? <a href="/signup">Sign up</a></p>
+                <p>Don't have an account? <a onClick={() => navigate("/signup")} > Sign up</a></p>
             </div>
         </div>
     );
