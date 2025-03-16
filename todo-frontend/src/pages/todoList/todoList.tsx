@@ -165,7 +165,8 @@ const TodoList: React.FC = ()=> {
                         activeClassName={"active"} // Active page CSS class
                         nextClassName={"next-page"} // Next button class
                         previousClassName={"prev-page"} // Previous button class
-                        disabledClassName={"disabled"} // Disabled button class
+                        disabledClassName={"disabled"}
+                        forcePage={currentPageNumber - 1}
                     />
                 </div>
             </div>

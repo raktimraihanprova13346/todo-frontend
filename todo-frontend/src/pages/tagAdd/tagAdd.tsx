@@ -1,7 +1,7 @@
 import './tagAdd.scss';
 import React from "react";
 import Menus from "../../componets/menus/menus";
-import AddTagServices, {Tag, TagResponse} from "../../services/addTag";
+import AddTagServices, {TagAddReq, TagResponse} from "../../services/addTag";
 import {useDispatch} from "react-redux";
 import store from "../../store";
 import Swal from "sweetalert2";
@@ -16,7 +16,7 @@ const TadAdd: React.FC = () => {
     const handleAddTag = async (e: React.FormEvent) => {
         e.preventDefault();
         if (tag.trim()) {
-            const tagData: Tag = {
+            const tagData: TagAddReq = {
                 tagName: tag,
                 emailAddress: emailAddress
             };

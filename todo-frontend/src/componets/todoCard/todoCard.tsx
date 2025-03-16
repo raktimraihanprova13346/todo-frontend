@@ -165,7 +165,7 @@ const TodoCard: React.FC<TodoCardProps> = (todoCardProps: TodoCardProps) => {
                 setIsEditingTag(false);
                 await updateData()
                 timerId.current = null;
-            },1000);
+            },2500);
     }
 
     const handleDateBlur = async () => {
