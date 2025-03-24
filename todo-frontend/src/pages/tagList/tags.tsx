@@ -78,7 +78,7 @@ const TagList = () => {
                     <h4 className="tags-label">Tags</h4>
                     {
                         tag && tag.map(t => (
-                            <TagComponent id={t.id} content={t.tagName} onDelete={handleDelete} />
+                            <TagComponent key={t.id} id={t.id} content={t.tagName} onDelete={handleDelete} />
                         ))
                     }
 
