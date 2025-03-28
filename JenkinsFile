@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                dir('todo-frontend') {
+                    git 'https://github.com/your/repository.git'
+                }
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('todo-frontend') {
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('todo-frontend') {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t my-react-app:latest .'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                script {
+                    sh 'docker run -d -p 80:80 --name my-react-app my-react-app:latest'
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline has finished running'  // Can be used for cleanup or notifications
+        }
+    }
+}
