@@ -45,7 +45,7 @@ pipeline {
 
     post {
         always {
-            echo 'Pipeline has finished running'  // Can be used for cleanup or notifications
+            echo 'Pipeline has finished running'
         }
     }
 }
