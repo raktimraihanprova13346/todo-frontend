@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 dir('todo-frontend') {
-                    git 'https://github.com/your/repository.git'
+                    git branch: 'main', credentialsId: '1429df98-a349-4222-94bf-4bb3a074cbd6', url: 'https://github.com/your/repository.git'
                 }
             }
         }
