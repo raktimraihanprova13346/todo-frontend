@@ -5,13 +5,6 @@ pipeline {
             GITHUB_TOKEN = credentials('1429df98-a349-4222-94bf-4bb3a074cbd6')
     }
 
-    stage('Check Node and npm versions') {
-        steps {
-            sh 'node -v'
-            sh 'npm -v'
-        }
-    }
-
     stages {
         stage('Checkout') {
             steps {
