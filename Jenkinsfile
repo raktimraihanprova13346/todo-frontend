@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+            GITHUB_TOKEN = credentials('1429df98-a349-4222-94bf-4bb3a074cbd6')
+        }
+
     stages {
         stage('Checkout') {
             steps {
