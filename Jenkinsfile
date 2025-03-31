@@ -5,6 +5,10 @@ pipeline {
             GITHUB_TOKEN = credentials('1429df98-a349-4222-94bf-4bb3a074cbd6')
     }
 
+    tools {
+        nodejs "nodejs"
+    }
+
     stages {
         stage('Checkout') {
             steps {
