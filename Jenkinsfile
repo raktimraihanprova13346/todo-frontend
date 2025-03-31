@@ -2,15 +2,12 @@ pipeline {
     agent any
 
     environment {
-            GITHUB_TOKEN = credentials('1429df98-a349-4222-94bf-4bb3a074cbd6')
+        CI = false 
+        GITHUB_TOKEN = credentials('1429df98-a349-4222-94bf-4bb3a074cbd6')
     }
 
     tools {
         nodejs "nodejs"
-    }
-
-    environment {
-        CI = false      
     }
 
     stages {
