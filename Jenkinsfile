@@ -9,6 +9,10 @@ pipeline {
         nodejs "nodejs"
     }
 
+    environment {
+        CI = false      
+    }
+
     stages {
         stage('Checkout') {
             steps {
